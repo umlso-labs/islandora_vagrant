@@ -38,8 +38,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, path: "./scripts/islandora_modules.sh", :args => shared_dir, :privileged => false
   config.vm.provision :shell, path: "./scripts/islandora_libraries.sh", :args => shared_dir, :privileged => false
+  config.vm.provision :shell, path: "./scripts/multi_site.sh", :args => shared_dir
+  config.vm.provision :shell, path: "./scripts/expand_files.sh", :args => shared_dir
+
   if File.exist?("./scripts/custom.sh") then
     config.vm.provision :shell, path: "./scripts/custom.sh", :args => shared_dir
   end
+
   config.vm.provision :shell, path: "./scripts/post.sh"
 end

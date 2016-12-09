@@ -17,11 +17,23 @@ sudo chmod -R 755 "$DRUPAL_HOME"/sites/all/libraries
 sudo chmod -R 755 "$DRUPAL_HOME"/sites/all/modules
 sudo chmod -R 755 "$DRUPAL_HOME"/sites/default/files
 
-# Clone all Islandora Foundation modules
+# Clone all Islandora Foundation modules 7.x-1.8 branch
 cd "$DRUPAL_HOME"/sites/all/modules || exit
 while read -r LINE; do
   git clone -b 7.x-1.8 https://github.com/Islandora/"$LINE"
 done < "$SHARED_DIR"/configs/islandora-module-list-sans-tuque.txt
+
+# Clone umlso modules 7.x-1.8 branch
+cd "$DRUPAL_HOME"/sites/all/modules || exit
+while read -r LINE; do
+  git clone -b 7.x-1.8 "$LINE"
+done < "$SHARED_DIR"/configs/umlso-module-list.txt
+
+# Clone discoverygarden/other modules HEAD
+cd "$DRUPAL_HOME"/sites/all/modules || exit
+while read -r LINE; do
+  git clone "$LINE"
+done < "$SHARED_DIR"/configs/other-module-list.txt
 
 # Set git filemode false for git
 cd "$DRUPAL_HOME"/sites/all/modules || exit
@@ -40,6 +52,12 @@ cd "$DRUPAL_HOME"/sites/all/libraries || exit
 git clone -b 1.8 https://github.com/Islandora/tuque.git
 git clone git://github.com/scholarslab/BagItPHP.git
 git clone https://github.com/Islandora/citeproc-php.git
+git clone https://github.com/Islandora/bookreader
+git clone https://github.com/umlso/galleria
+git clone https://github.com/umlso/jodconverter-2.2.2
+git clone https://github.com/umlso/jquery.cycle
+git clone https://github.com/umlso/jwplayer
+git clone https://github.com/mozilla/pdf.js
 
 cd "$DRUPAL_HOME"/sites/all/libraries/tuque || exit
 git config core.filemode false
@@ -71,6 +89,26 @@ fi
 if [ -d "$HOME_DIR/.drush" ] && [ -f "$DRUPAL_HOME/sites/all/modules/islandora_internet_archive_bookreader/islandora_internet_archive_bookreader.drush.inc" ]; then
   mv "$DRUPAL_HOME/sites/all/modules/islandora_internet_archive_bookreader/islandora_internet_archive_bookreader.drush.inc" "$HOME_DIR/.drush"
 fi
+
+# Suppress error when disabling ldap
+export DEBIAN_FRONTEND=noninteractive
+sudo apt-get update
+sudo apt-get -y install php5-mcrypt
+cd /etc/php5/cli/conf.d
+sudo ln -s ../../mods-available/mcrypt.ini 20-mcrypt.ini
+sudo php5enmod mcrypt
+
+# Download certain modules to modules/contrib so that backup_migrate works correctly
+mkdir -pm 775 "$DRUPAL_HOME/sites/all/modules/contrib"
+cd "$DRUPAL_HOME/sites/all/modules/contrib" || exit
+drush -y -u 1 dl admin_menu advanced_help backup_migrate block_class 
+drush -y -u 1 dl chart coder-7.x-2.6 colorbox countdown_event ctools datepicker devel 
+drush -y -u 1 dl entity entityreference exclude_node_title extlink 
+drush -y -u 1 dl features features_extra feeds galleria git_deploy google_analytics 
+drush -y -u 1 dl i18n image_field_caption image_link_formatter imagemagick 
+drush -y -u 1 dl jquery_update ldap libraries link linkchecker module_missing_message_fixer 
+drush -y -u 1 dl nice_menus node_export oauth openid_selector pathauto plupload rules 
+drush -y -u 1 dl securelogin strongarm token uuid variable views_data_export views_slideshow views_slideshow_galleria xmlsitemap
 
 drush -y -u 1 en php_lib islandora objective_forms
 drush -y -u 1 en islandora_solr islandora_solr_metadata islandora_solr_facet_pages islandora_solr_views
