@@ -36,4 +36,4 @@ curl -sS -o fits.zip http://projects.iq.harvard.edu/files/fits/files/fits-0.6.2.
 cd /opt || exit
 sudo unzip "/tmp/fits.zip"
 sudo chown -R vagrant:www-data /opt/fits-0.6.2
-sudo chmod u+x /opt/fits-0.6.2/fits.sh
+sudo chmod ug+x /opt/fits-0.6.2/fits.sh
