@@ -120,3 +120,9 @@ done
 
 # Symlink tesseract binary
 sudo ln -sf /usr/bin/tesseract /usr/local/bin/tesseract
+
+# Create root collection pids in fedora
+cd "$DRUPAL_HOME"/sites/all/modules || exit
+git clone https://github.com/nihilanth41/islandora_vagrant_fedora_objects.git
+drush -y -u 1 en islandora_vagrant_fedora_objects
+
