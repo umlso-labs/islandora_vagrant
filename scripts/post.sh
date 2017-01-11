@@ -1,5 +1,24 @@
 #!/bin/bash
 
+SHARED_DIR=$1
+if [ -f "$SHARED_DIR/configs/variables" ]; then
+  . "$SHARED_DIR"/configs/variables
+fi
+
+# Install features to enforce djatoka url setting, among other things
+cd "$DRUPAL_HOME"/sites/all/modules || exit
+drush @sites -y -u 1 en features
+git clone https://github.com/nihilanth41/islandora_vagrant_features.git
+cd "$DRUPAL_HOME"/sites/mu || exit
+drush -y -u 1 en islandora_vagrant_features
+drush -y fr islandora_vagrant_features
+cd "$DRUPAL_HOME"/sites/umkc || exit
+drush -y -u 1 en islandora_vagrant_features
+drush -y fr islandora_vagrant_features
+cd "$DRUPAL_HOME"/sites/umsl || exit
+drush -y -u 1 en islandora_vagrant_features
+drush -y fr islandora_vagrant_features
+
 # Setup a user for Tomcat Manager
 sed -i '$i<role rolename="admin-gui"/>' /etc/tomcat7/tomcat-users.xml
 sed -i '$i<user username="islandora" password="islandora" roles="manager-gui,admin-gui"/>' /etc/tomcat7/tomcat-users.xml
