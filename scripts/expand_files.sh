@@ -6,9 +6,9 @@ if [ -f "$SHARED_DIR/configs/variables" ]; then
   . "$SHARED_DIR"/configs/variables
 fi
 
-if [ -d "$SHARED_DIR/islandora_db_sync" ]; then 
-	SOURCE_FILES="$SHARED_DIR/islandora_db_sync/files"
-	SOURCE_PRIVATE="$SHARED_DIR/islandora_db_sync/private"
+if [ -d "$SHARED_DIR/islandora_vagrant_db_sync" ]; then 
+	SOURCE_FILES="$SHARED_DIR/islandora_vagrant_db_sync/files"
+	SOURCE_PRIVATE="$SHARED_DIR/islandora_vagrant_db_sync/private"
 	DEST_DIR="/mnt/storage"
 	
 	# Make /mnt/storage if dne 

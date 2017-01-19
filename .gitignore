@@ -2,4 +2,4 @@
 downloads
 scripts/custom.sh
 package.box
-islandora_db_sync
+islandora_vagrant_db_sync
