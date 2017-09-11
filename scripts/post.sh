@@ -80,7 +80,6 @@ drush --root=/var/www/drupal role-add-perm "authenticated user" "view fedora rep
 drush --root=/var/www/drupal cc all
 
 # Lets brand this a bit
-
 cat <<'EOT' >> /home/vagrant/.bashrc
 echo '   __________   ___   _  _____  ____  ___  ___     '
 echo '  /  _/ __/ /  / _ | / |/ / _ \/ __ \/ _ \/ _ |    '
@@ -140,5 +139,21 @@ echo '...;::,.` ;+.+++#:             #.                                         
 echo '           `;+@#+++++.+#                                                                            '
 echo '               ,#+#.`                                                                               '
 echo '                 :@+....+,                                                                          '
-
 EOT
+
+# Install fcrepo3-security-jaas -- filter-drupal.xml installed earlier in provisioning
+cp -v -- "${SHARED_DIR}/configs/jaas.conf" /usr/local/fedora/server/config/jaas.conf
+cp -v -- "${SHARED_DIR}/configs/security.xml" /usr/local/fedora/server/config/spring/web/security.xml
+cp -v -- "${SHARED_DIR}/configs/fcrepo3-security-jaas-0.0.3-fcrepo3.8.1.jar" /var/lib/tomcat7/webapps/fedora/WEB-INF/lib/.
+cd "${DRUPAL_HOME}"/sites/all/modules || exit
+git clone https://github.com/discoverygarden/islandora_repository_connection_config
+drush @sites -y -u 1 en islandora_repository_connection_config
+sites_arr=( default lso merlin mu umkc umkclaw umkcscholar umsl ) 
+for i in "${sites_arr[@]}"
+do
+	cd "$DRUPAL_HOME/sites/${i}"
+	drush eval "variable_set("islandora_repository_connection_config", array("cookies" => TRUE, "verifyHost" => TRUE, "verifyPeer" => TRUE, "timeout" => NULL, "connectTimeout" => "5", "userAgent" => "${i}_key", "reuseConnection" => TRUE, "debug" => FALSE))" 
+done
+chown -R tomcat7:tomcat7 "/var/lib/tomcat7"
+chown -R tomcat7:tomcat7 "/usr/local/fedora/server"
+service tomcat7 restart

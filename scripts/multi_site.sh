@@ -44,8 +44,11 @@ sudo echo "ServerName localhost" >> /etc/apache2/apache2.conf
 sites_arr=( lso merlin mu umkc umkclaw umkcscholar umsl ) 
 for i in "${sites_arr[@]}"
 do
-	cd $DRUPAL_HOME
-	drush si -y --db-url=mysql://root:islandora@localhost/"$i" --sites-subdir="$i" --site-name="localhost/$i"
+	cd "${DRUPAL_HOME}"
+	SITE_USER="${i}dba" 
+	SITE_PASS="${i}_pass"
+	# --db-su and --db-su-pass specify the /mysql user/ that has permission to create new mysql databases. 
+	drush si -y --db-url=mysql://"${SITE_USER}:${SITE_PASS}@localhost/${i}" --sites-subdir="$i" --site-name="localhost/${i}" --db-su="root" --db-su-pw="islandora"
 	# Symlink inside docroot 
 	ln -s . "$i"
 	# Symlink inside sites dir
@@ -125,3 +128,9 @@ sudo ln -sf /usr/bin/tesseract /usr/local/bin/tesseract
 cd "$DRUPAL_HOME"/sites/all/modules || exit
 git clone https://github.com/umlts-labs/islandora_vagrant_fedora_objects.git
 drush -y -u 1 en islandora_vagrant_fedora_objects
+
+# Enable general query log so that we can see if the fcrepo-security-jaas module is working.
+# /var/lib/mysql/islandora.log
+mysql -uroot -pislandora -t<<EOF
+SET GLOBAL general_log = 1;
+EOF
