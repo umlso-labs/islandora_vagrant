@@ -8,7 +8,7 @@ fi
 # Install features to enforce djatoka url setting, among other things
 cd "$DRUPAL_HOME"/sites/all/modules || exit
 drush @sites -y -u 1 en features
-git clone https://github.com/nihilanth41/islandora_vagrant_features.git
+git clone https://github.com/umlts-labs/islandora_vagrant_features.git
 cd "$DRUPAL_HOME"/sites/mu || exit
 drush -y -u 1 en islandora_vagrant_features
 drush -y fr islandora_vagrant_features

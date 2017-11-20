@@ -23,11 +23,11 @@ while read -r LINE; do
   git clone -b 7.x-1.9 https://github.com/Islandora/"$LINE"
 done < "$SHARED_DIR"/configs/islandora-module-list-sans-tuque.txt
 
-# Clone umlso modules 7.x-1.8 branch
+# Clone umlts modules 7.x-1.9 branch
 cd "$DRUPAL_HOME"/sites/all/modules || exit
 while read -r LINE; do
-  git clone -b 7.x-1.8 "$LINE"
-done < "$SHARED_DIR"/configs/umlso-module-list.txt
+  git clone -b 7.x-1.9 "$LINE"
+done < "$SHARED_DIR"/configs/umlts-module-list.txt
 
 # Clone discoverygarden/other modules HEAD
 cd "$DRUPAL_HOME"/sites/all/modules || exit
@@ -50,14 +50,14 @@ if [ ! -d libraries ]; then
 fi
 cd "$DRUPAL_HOME"/sites/all/libraries || exit
 git clone -b 1.9 https://github.com/Islandora/tuque.git
-git clone git://github.com/scholarslab/BagItPHP.git
+git clone https://github.com/scholarslab/BagItPHP.git
 git clone https://github.com/Islandora/citeproc-php.git
-git clone https://github.com/Islandora/bookreader
-git clone https://github.com/umlso/galleria
-git clone https://github.com/umlso/jodconverter-2.2.2
-git clone https://github.com/umlso/jquery.cycle
-git clone https://github.com/umlso/jwplayer
-git clone https://github.com/mozilla/pdf.js
+git clone https://github.com/Islandora/internet_archive_bookreader
+git clone https://github.com/umlts/galleria
+git clone https://github.com/umlts/jodconverter-2.2.2
+git clone https://github.com/umlts/jquery.cycle
+git clone https://github.com/umlts/jwplayer
+git clone https://github.com/umlts/pdf.js
 
 cd "$DRUPAL_HOME"/sites/all/libraries/tuque || exit
 git config core.filemode false
