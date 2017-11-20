@@ -20,10 +20,10 @@ sudo chmod -R 755 "$DRUPAL_HOME"/sites/default/files
 # Clone all Islandora Foundation modules 7.x-1.8 branch
 cd "$DRUPAL_HOME"/sites/all/modules || exit
 while read -r LINE; do
-  git clone -b 7.x-1.9 https://github.com/Islandora/"$LINE"
+  git clone -b 7.x-1.10 https://github.com/Islandora/"$LINE"
 done < "$SHARED_DIR"/configs/islandora-module-list-sans-tuque.txt
 
-# Clone umlts modules 7.x-1.9 branch
+# Clone umlts modules 7.x-1.9 branch - replace with 7.x-1.10 when it exists.
 cd "$DRUPAL_HOME"/sites/all/modules || exit
 while read -r LINE; do
   git clone -b 7.x-1.9 "$LINE"
@@ -49,8 +49,8 @@ if [ ! -d libraries ]; then
   mkdir libraries
 fi
 cd "$DRUPAL_HOME"/sites/all/libraries || exit
-git clone -b 1.9 https://github.com/Islandora/tuque.git
-git clone https://github.com/scholarslab/BagItPHP.git
+git clone -b 1.10 https://github.com/Islandora/tuque.git
+git clone git://github.com/scholarslab/BagItPHP.git
 git clone https://github.com/Islandora/citeproc-php.git
 git clone https://github.com/Islandora/internet_archive_bookreader
 git clone https://github.com/umlts/galleria

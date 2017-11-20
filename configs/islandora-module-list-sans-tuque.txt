@@ -1,4 +1,4 @@
-islandora_altmetrics
+islandora_badges
 islandora_bagit
 islandora_book_batch
 islandora_bookmark
