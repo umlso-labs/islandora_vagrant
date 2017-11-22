@@ -102,7 +102,7 @@ done
 # http://drupal.stackexchange.com/a/97834
 # Disable update module -> disable notifications about updates
 cd "$DRUPAL_HOME"
-drush @sites -y -u 1 pm-disable update
+#drush @sites -y -u 1 pm-disable update
 drush @sites -y -u 1 en devel
 
 # Let DevelMailLog intercept all mail 

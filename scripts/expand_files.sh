@@ -29,6 +29,7 @@ if [ -d "$SHARED_DIR/islandora_vagrant_db_sync" ]; then
 	# Enable backup_migrate for all sites 
 	cd "$DRUPAL_HOME"
 	drush @sites -y -u 1 en backup_migrate 
+	drush @sites cc all
 
 	sites_arr=( default lso merlin mu umkc umkcscholar umsl )
 	for i in "${sites_arr[@]}" 

@@ -119,6 +119,9 @@ drush -y -u 1 en xml_forms xml_form_builder xml_schema_api xml_form_elements xml
 drush -y -u 1 en islandora_fits islandora_ocr islandora_oai islandora_marcxml islandora_simple_workflow islandora_xacml_api islandora_xacml_editor islandora_xmlsitemap colorbox islandora_internet_archive_bookreader islandora_bagit islandora_batch_report islandora_usage_stats islandora_form_fieldpanel islandora_altmetrics islandora_populator islandora_newspaper_batch 
 
 cd "$DRUPAL_HOME"/sites/all/modules || exit
+rm -rf coder/ ctools/ datepicker/ devel/ imagemagick/ token/ variable/ pathauto/ jquery_update/ xmlsitemap/
+mv date contrib/.
+mv views contrib/.
 
 # Set variables for Islandora modules
 drush eval "variable_set('islandora_audio_viewers', array('name' => array('none' => 'none', 'islandora_videojs' => 'islandora_videojs'), 'default' => 'islandora_videojs'))"
