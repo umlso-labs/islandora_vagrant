@@ -146,6 +146,13 @@ do
 	cd "$DRUPAL_HOME/sites/${i}"
 	drush eval "variable_set("islandora_repository_connection_config", array("cookies" => TRUE, "verifyHost" => TRUE, "verifyPeer" => TRUE, "timeout" => NULL, "connectTimeout" => "5", "userAgent" => "${i}_key", "reuseConnection" => TRUE, "debug" => FALSE))" 
 done
+
+# Install configuration for multithread fedoragsearch updaters. 
+cp -v -- "${SHARED_DIR}/configs/multithread_config/fedora.fcfg" /usr/local/fedora/server/config/fedora.fcfg
+cp -v -- "${SHARED_DIR}/configs/multithread_config/fedoragsearch.properties" /var/lib/tomcat7/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/fedoragsearch.properties
+rm -rf /var/lib/tomcat7/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/updater && \
+	cp -Rv "${SHARED_DIR}/configs/multithread_config/updater" /var/lib/tomcat7/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/.
+
 chown -R tomcat7:tomcat7 "/var/lib/tomcat7"
 chown -R tomcat7:tomcat7 "/usr/local/fedora/server"
 service tomcat7 restart
