@@ -7,17 +7,9 @@ fi
 
 # Install features to enforce djatoka url setting, among other things
 cd "$DRUPAL_HOME"/sites/all/modules || exit
-drush @sites -y -u 1 en features
-git clone https://github.com/umlts-labs/islandora_vagrant_features.git
-cd "$DRUPAL_HOME"/sites/mu || exit
-drush -y -u 1 en islandora_vagrant_features
-drush -y fr islandora_vagrant_features
-cd "$DRUPAL_HOME"/sites/umkc || exit
-drush -y -u 1 en islandora_vagrant_features
-drush -y fr islandora_vagrant_features
-cd "$DRUPAL_HOME"/sites/umsl || exit
-drush -y -u 1 en islandora_vagrant_features
-drush -y fr islandora_vagrant_features
+git clone https://github.com/umlts-labs/islandora_vagrant_features.git -b 7.x-1.10
+drush @sites -y -u 1 en islandora_vagrant_features features
+drush @sites -y -u 1 fr islandora_vagrant_features
 
 # Fix drupal permissions
 # https://www.drupal.org/node/244924
