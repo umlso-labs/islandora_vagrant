@@ -134,9 +134,9 @@ echo '                 :@+....+,                                                
 EOT
 
 # Install fcrepo3-security-jaas -- filter-drupal.xml installed earlier in provisioning
-cp -v -- "${SHARED_DIR}/configs/jaas.conf" /usr/local/fedora/server/config/jaas.conf
-cp -v -- "${SHARED_DIR}/configs/security.xml" /usr/local/fedora/server/config/spring/web/security.xml
-cp -v -- "${SHARED_DIR}/configs/fcrepo3-security-jaas-0.0.3-fcrepo3.8.1.jar" /var/lib/tomcat7/webapps/fedora/WEB-INF/lib/.
+cp -v -- "${SHARED_DIR}/configs/fcrepo3-security-jaas/jaas.conf" /usr/local/fedora/server/config/jaas.conf
+cp -v -- "${SHARED_DIR}/configs/fcrepo3-security-jaas/security.xml" /usr/local/fedora/server/config/spring/web/security.xml
+cp -v -- "${SHARED_DIR}/configs/fcrepo3-security-jaas/fcrepo3-security-jaas-0.0.3-fcrepo3.8.1.jar" /var/lib/tomcat7/webapps/fedora/WEB-INF/lib/.
 cd "${DRUPAL_HOME}"/sites/all/modules || exit
 git clone https://github.com/discoverygarden/islandora_repository_connection_config
 drush @sites -y -u 1 en islandora_repository_connection_config
