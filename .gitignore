@@ -3,3 +3,5 @@ downloads
 scripts/custom.sh
 package.box
 islandora_vagrant_db_sync
+islandora_vagrant_blazegraph
+debug.log
