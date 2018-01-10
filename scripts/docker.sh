@@ -23,7 +23,8 @@ apt-get install -y \
     curl \
     software-properties-common \
     docker-ce
-	
+
+[[ ! -d "$SHARED_DIR/islandora_vagrant_blazegraph" ]] && cd "${SHARED_DIR}" && git clone https://github.com/umlts-labs/islandora_vagrant_blazegraph -b 7.x-1.10
 if [ -d "$SHARED_DIR/islandora_vagrant_blazegraph" ]; then
 	cp -Rv -- "$SHARED_DIR/islandora_vagrant_blazegraph" "$HOME_DIR"
 	
