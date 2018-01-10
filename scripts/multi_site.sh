@@ -44,8 +44,11 @@ sudo echo "ServerName localhost" >> /etc/apache2/apache2.conf
 sites_arr=( lso merlin mu umkc umkclaw umkcscholar umsl ) 
 for i in "${sites_arr[@]}"
 do
-	cd $DRUPAL_HOME
-	drush si -y --db-url=mysql://root:islandora@localhost/"$i" --sites-subdir="$i" --site-name="localhost/$i"
+	cd "${DRUPAL_HOME}"
+	SITE_USER="${i}dba" 
+	SITE_PASS="${i}_pass"
+	# --db-su and --db-su-pass specify the /mysql user/ that has permission to create new mysql databases. 
+	drush si -y --db-url=mysql://"${SITE_USER}:${SITE_PASS}@localhost/${i}" --sites-subdir="$i" --site-name="localhost/${i}" --db-su="root" --db-su-pw="islandora"
 	# Symlink inside docroot 
 	ln -s . "$i"
 	# Symlink inside sites dir
@@ -55,6 +58,8 @@ do
 	# Set password & create ctools/css for each site
 	drush user-password admin --password=islandora
 	mkdir -pm 777 files/ctools/css 
+	mkdir -pm 750 modules
+	mkdir -pm 750 themes
 done
 
 # Enable modules for all sites	
@@ -67,7 +72,7 @@ sudo drush @sites -y -u 1 en islandora_book_batch islandora_pathauto islandora_p
 sudo drush @sites -y -u 1 en xml_forms xml_form_builder xml_schema_api xml_form_elements xml_form_api jquery_update zip_importer islandora_basic_image islandora_bibliography islandora_compound_object islandora_google_scholar islandora_scholar_embargo islandora_solr_config citation_exporter doi_importer endnotexml_importer pmid_importer ris_importer
 sudo drush @sites -y -u 1 en islandora_fits islandora_ocr islandora_oai islandora_marcxml islandora_simple_workflow islandora_xacml_api islandora_xacml_editor islandora_xmlsitemap colorbox islandora_internet_archive_bookreader islandora_bagit islandora_batch_report islandora_usage_stats islandora_form_fieldpanel islandora_altmetrics islandora_populator islandora_newspaper_batch 
 
-sudo drush @sites -y -u 1 en admin_menu
+sudo drush @sites -y -u 1 en admin_menu devel
 
 # Disable modules that are problematic in the VM environment 
 sudo drush @sites -u 1 -y dis toolbar overlay securelogin ldap_servers 
@@ -101,12 +106,9 @@ done
 # Disable email notifications for development
 # http://drupal.stackexchange.com/a/97834
 # Disable update module -> disable notifications about updates
-cd "$DRUPAL_HOME"
-#drush @sites -y -u 1 pm-disable update
-drush @sites -y -u 1 en devel
-
 # Let DevelMailLog intercept all mail 
 # Add to settings.php for each site
+cd "$DRUPAL_HOME"
 sites_arr=( default lso merlin mu umkc umkclaw umkcscholar umsl ) 
 MAIL_CFG_TXT="
 \$conf['mail_system'] = array(
@@ -125,3 +127,9 @@ sudo ln -sf /usr/bin/tesseract /usr/local/bin/tesseract
 cd "$DRUPAL_HOME"/sites/all/modules || exit
 git clone https://github.com/umlts-labs/islandora_vagrant_fedora_objects.git
 drush -y -u 1 en islandora_vagrant_fedora_objects
+
+# Enable general query log so that we can see if the fcrepo-security-jaas module is working.
+# /var/lib/mysql/islandora.log
+mysql -uroot -pislandora -t<<EOF
+SET GLOBAL general_log = 1;
+EOF

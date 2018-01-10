@@ -7,17 +7,9 @@ fi
 
 # Install features to enforce djatoka url setting, among other things
 cd "$DRUPAL_HOME"/sites/all/modules || exit
-drush @sites -y -u 1 en features
-git clone https://github.com/umlts-labs/islandora_vagrant_features.git
-cd "$DRUPAL_HOME"/sites/mu || exit
-drush -y -u 1 en islandora_vagrant_features
-drush -y fr islandora_vagrant_features
-cd "$DRUPAL_HOME"/sites/umkc || exit
-drush -y -u 1 en islandora_vagrant_features
-drush -y fr islandora_vagrant_features
-cd "$DRUPAL_HOME"/sites/umsl || exit
-drush -y -u 1 en islandora_vagrant_features
-drush -y fr islandora_vagrant_features
+git clone https://github.com/umlts-labs/islandora_vagrant_features.git -b 7.x-1.10
+drush @sites -y -u 1 en islandora_vagrant_features features
+drush @sites -y -u 1 fr islandora_vagrant_features
 
 # Fix drupal permissions
 # https://www.drupal.org/node/244924
@@ -80,7 +72,6 @@ drush --root=/var/www/drupal role-add-perm "authenticated user" "view fedora rep
 drush --root=/var/www/drupal cc all
 
 # Lets brand this a bit
-
 cat <<'EOT' >> /home/vagrant/.bashrc
 echo '   __________   ___   _  _____  ____  ___  ___     '
 echo '  /  _/ __/ /  / _ | / |/ / _ \/ __ \/ _ \/ _ |    '
@@ -140,5 +131,28 @@ echo '...;::,.` ;+.+++#:             #.                                         
 echo '           `;+@#+++++.+#                                                                            '
 echo '               ,#+#.`                                                                               '
 echo '                 :@+....+,                                                                          '
-
 EOT
+
+# Install fcrepo3-security-jaas -- filter-drupal.xml installed earlier in provisioning
+cp -v -- "${SHARED_DIR}/configs/fcrepo3-security-jaas/jaas.conf" /usr/local/fedora/server/config/jaas.conf
+cp -v -- "${SHARED_DIR}/configs/fcrepo3-security-jaas/security.xml" /usr/local/fedora/server/config/spring/web/security.xml
+cp -v -- "${SHARED_DIR}/configs/fcrepo3-security-jaas/fcrepo3-security-jaas-0.0.3-fcrepo3.8.1.jar" /var/lib/tomcat7/webapps/fedora/WEB-INF/lib/.
+cd "${DRUPAL_HOME}"/sites/all/modules || exit
+git clone https://github.com/discoverygarden/islandora_repository_connection_config
+drush @sites -y -u 1 en islandora_repository_connection_config
+sites_arr=( default lso merlin mu umkc umkclaw umkcscholar umsl ) 
+for i in "${sites_arr[@]}"
+do
+	cd "$DRUPAL_HOME/sites/${i}"
+	drush eval "variable_set("islandora_repository_connection_config", array("cookies" => TRUE, "verifyHost" => TRUE, "verifyPeer" => TRUE, "timeout" => NULL, "connectTimeout" => "5", "userAgent" => "${i}_key", "reuseConnection" => TRUE, "debug" => FALSE))" 
+done
+
+# Install configuration for multithread fedoragsearch updaters. 
+cp -v -- "${SHARED_DIR}/configs/multithread_config/fedora.fcfg" /usr/local/fedora/server/config/fedora.fcfg
+cp -v -- "${SHARED_DIR}/configs/multithread_config/fedoragsearch.properties" /var/lib/tomcat7/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/fedoragsearch.properties
+rm -rf /var/lib/tomcat7/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/updater && \
+	cp -Rv "${SHARED_DIR}/configs/multithread_config/updater" /var/lib/tomcat7/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/.
+
+chown -R tomcat7:tomcat7 "/var/lib/tomcat7"
+chown -R tomcat7:tomcat7 "/usr/local/fedora/server"
+service tomcat7 restart
