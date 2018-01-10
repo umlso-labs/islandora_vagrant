@@ -20,13 +20,13 @@ if [ ! -d themes ]; then
 fi
 
 cd "$DRUPAL_HOME"/sites/all/themes || exit
-git clone https://github.com/umlso/dl-theme.git dl-theme 
-git clone https://github.com/umlso/lso-theme.git lso-theme 
-git clone https://github.com/umlso/merlin-theme.git merlin-theme 
-git clone https://github.com/umlso/mu-theme.git mu-theme 
+git clone https://github.com/umlts/dl-theme.git dl-theme 
+git clone https://github.com/umlts/lso-theme.git lso-theme 
+git clone https://github.com/umlts/merlin-theme.git merlin-theme 
+git clone https://github.com/umlts/mu-theme.git mu-theme 
 # This branch is for most recent zen version (7.x-6.4) w/ Islandora 1.8 changes
-git clone -b zen-6.4 https://github.com/umlso/umkc-theme.git umkc-theme 
-git clone https://github.com/umlso/umsl-theme.git umsl-theme 
+git clone -b zen-6.4 https://github.com/umlts/umkc-theme.git umkc-theme 
+git clone https://github.com/umlts/umsl-theme.git umsl-theme 
 
 # Create ctools/css and set permissions
 cd "$DRUPAL_HOME"/sites/all
@@ -123,5 +123,5 @@ sudo ln -sf /usr/bin/tesseract /usr/local/bin/tesseract
 
 # Create root collection pids in fedora
 cd "$DRUPAL_HOME"/sites/all/modules || exit
-git clone https://github.com/nihilanth41/islandora_vagrant_fedora_objects.git
+git clone https://github.com/umlts-labs/islandora_vagrant_fedora_objects.git
 drush -y -u 1 en islandora_vagrant_fedora_objects
