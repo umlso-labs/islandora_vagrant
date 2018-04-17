@@ -1,0 +1,7 @@
+https://github.com/umlts/islandora
+https://github.com/umlts/islandora_batch
+https://github.com/umlts/islandora_importer
+https://github.com/umlts/islandora_xml_forms
+https://github.com/umlts/umkcdora.git
+https://github.com/umlts/umkc-feature-types.git
+https://github.com/umlts/umkc_islandora_browse.git
