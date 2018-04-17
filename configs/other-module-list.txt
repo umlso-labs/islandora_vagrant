@@ -1,0 +1,12 @@
+https://github.com/islandora-labs/islandora_image_annotation
+https://github.com/islandora-labs/islandora_ip_embargo
+https://github.com/discoverygarden/google_analytics_reports
+https://github.com/discoverygarden/islandora_collection_search
+https://github.com/discoverygarden/islandora_jodconverter
+https://github.com/discoverygarden/islandora_mapping
+https://github.com/discoverygarden/islandora_plupload
+https://github.com/discoverygarden/islandora_solution_pack_document
+https://github.com/DrexelUniversityLibraries/islandora_solution_pack_ead
+https://github.com/umlso/umkcdora
+https://github.com/umlso/umkc_islandora_browse.git 
+https://github.com/discoverygarden/umkc-feature-types

@@ -1,0 +1,4 @@
+https://github.com/umlso/islandora
+https://github.com/umlso/islandora_batch
+https://github.com/umlso/islandora_importer
+https://github.com/umlso/islandora_xml_forms
