@@ -17,11 +17,23 @@ sudo chmod -R 755 "$DRUPAL_HOME"/sites/all/libraries
 sudo chmod -R 755 "$DRUPAL_HOME"/sites/all/modules
 sudo chmod -R 755 "$DRUPAL_HOME"/sites/default/files
 
-# Clone all Islandora Foundation modules
+# Clone all Islandora Foundation modules 7.x-1.8 branch
 cd "$DRUPAL_HOME"/sites/all/modules || exit
 while read -r LINE; do
   git clone -b 7.x-1.10 https://github.com/Islandora/"$LINE"
 done < "$SHARED_DIR"/configs/islandora-module-list-sans-tuque.txt
+
+# Clone umlts modules 7.x-1.9 branch - replace with 7.x-1.10 when it exists.
+cd "$DRUPAL_HOME"/sites/all/modules || exit
+while read -r LINE; do
+  git clone -b 7.x-1.9 "$LINE"
+done < "$SHARED_DIR"/configs/umlts-module-list.txt
+
+# Clone discoverygarden/other modules HEAD
+cd "$DRUPAL_HOME"/sites/all/modules || exit
+while read -r LINE; do
+  git clone "$LINE"
+done < "$SHARED_DIR"/configs/other-module-list.txt
 
 # Set git filemode false for git
 cd "$DRUPAL_HOME"/sites/all/modules || exit
@@ -40,6 +52,12 @@ cd "$DRUPAL_HOME"/sites/all/libraries || exit
 git clone -b 1.10 https://github.com/Islandora/tuque.git
 git clone git://github.com/scholarslab/BagItPHP.git
 git clone https://github.com/Islandora/citeproc-php.git
+git clone https://github.com/Islandora/internet_archive_bookreader
+git clone https://github.com/umlts/galleria
+git clone https://github.com/umlts/jodconverter-2.2.2
+git clone https://github.com/umlts/jquery.cycle
+git clone https://github.com/umlts/jwplayer
+git clone https://github.com/umlts/pdf.js
 
 cd "$DRUPAL_HOME"/sites/all/libraries/tuque || exit
 git config core.filemode false
@@ -72,6 +90,26 @@ if [ -d "$HOME_DIR/.drush" ] && [ -f "$DRUPAL_HOME/sites/all/modules/islandora_i
   mv "$DRUPAL_HOME/sites/all/modules/islandora_internet_archive_bookreader/islandora_internet_archive_bookreader.drush.inc" "$HOME_DIR/.drush"
 fi
 
+# Suppress error when disabling ldap
+export DEBIAN_FRONTEND=noninteractive
+sudo apt-get update
+sudo apt-get -y install php5-mcrypt
+cd /etc/php5/cli/conf.d
+sudo ln -s ../../mods-available/mcrypt.ini 20-mcrypt.ini
+sudo php5enmod mcrypt
+
+# Download certain modules to modules/contrib so that backup_migrate works correctly
+mkdir -pm 775 "$DRUPAL_HOME/sites/all/modules/contrib"
+cd "$DRUPAL_HOME/sites/all/modules/contrib" || exit
+drush -y -u 1 dl admin_menu advanced_help backup_migrate block_class 
+drush -y -u 1 dl chart coder-7.x-2.6 colorbox countdown_event ctools datepicker devel 
+drush -y -u 1 dl entity entityreference exclude_node_title extlink 
+drush -y -u 1 dl features features_extra feeds galleria git_deploy google_analytics 
+drush -y -u 1 dl i18n image_field_caption image_link_formatter imagemagick 
+drush -y -u 1 dl jquery_update ldap libraries link linkchecker module_missing_message_fixer 
+drush -y -u 1 dl nice_menus node_export oauth openid_selector pathauto plupload rules 
+drush -y -u 1 dl securelogin strongarm token uuid variable views_data_export views_slideshow views_slideshow_galleria xmlsitemap
+
 drush -y -u 1 en php_lib islandora objective_forms
 drush -y -u 1 en islandora_solr islandora_solr_metadata islandora_solr_facet_pages islandora_solr_views
 drush -y -u 1 en islandora_basic_collection islandora_pdf islandora_audio islandora_book islandora_compound_object islandora_disk_image islandora_entities islandora_entities_csv_import islandora_basic_image islandora_large_image islandora_newspaper islandora_video islandora_web_archive
@@ -81,6 +119,9 @@ drush -y -u 1 en xml_forms xml_form_builder xml_schema_api xml_form_elements xml
 drush -y -u 1 en islandora_fits islandora_ocr islandora_oai islandora_marcxml islandora_simple_workflow islandora_xacml_api islandora_xacml_editor islandora_xmlsitemap colorbox islandora_internet_archive_bookreader islandora_bagit islandora_batch_report islandora_usage_stats islandora_form_fieldpanel islandora_altmetrics islandora_populator islandora_newspaper_batch 
 
 cd "$DRUPAL_HOME"/sites/all/modules || exit
+rm -rf coder/ ctools/ datepicker/ devel/ imagemagick/ token/ variable/ pathauto/ jquery_update/ xmlsitemap/
+mv date contrib/.
+mv views contrib/.
 
 # Set variables for Islandora modules
 drush eval "variable_set('islandora_audio_viewers', array('name' => array('none' => 'none', 'islandora_videojs' => 'islandora_videojs'), 'default' => 'islandora_videojs'))"
