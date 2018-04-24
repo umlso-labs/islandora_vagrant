@@ -2,3 +2,6 @@
 downloads
 scripts/custom.sh
 package.box
+islandora_vagrant_db_sync
+*.swp
+*.log

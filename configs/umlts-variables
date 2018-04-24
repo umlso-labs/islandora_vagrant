@@ -1,0 +1,9 @@
+#!/bin/bash
+# shellcheck disable=SC2034
+
+UMLTS_SOURCE_FILES="$SHARED_DIR/islandora_vagrant_db_sync/files"
+UMLTS_SOURCE_PRIVATE="$SHARED_DIR/islandora_vagrant_db_sync/private"
+UMLTS_DEST_DIR="/mnt/storage"
+UMLTS_SITES_ARR=( default lso merlin mu umkc umsl )
+UMLTS_SITES_ARR_SANS_DEFAULT=( lso merlin mu umkc umsl )
+UMLTS_SITES_ARR_SUBDOMAIN_ONLY=( mu umkc umsl )

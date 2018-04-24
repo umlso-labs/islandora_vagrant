@@ -1,0 +1,13 @@
+coder
+ctools
+date
+datepicker
+devel
+imagemagick
+jquery_update
+libraries
+pathauto
+token
+variable
+views
+xmlsitemap

@@ -1,0 +1,8 @@
+https://github.com/umlts/dl-theme
+https://github.com/umlts/lso-theme
+https://github.com/umlts/merlin-theme
+https://github.com/umlts/mu-theme
+https://github.com/umlts/umkc-theme
+https://github.com/umlts/umkclaw-theme
+https://github.com/umlts/umkcscholar-theme
+https://github.com/umlts/umsl-theme
